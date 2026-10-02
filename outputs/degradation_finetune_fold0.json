@@ -1,0 +1,11 @@
+{
+ "fold": 0,
+ "config": {
+  "lr": 0.0001,
+  "epochs": 100
+ },
+ "val_dice_degraded_before": 0.8757438659667969,
+ "best_epoch": 24,
+ "val_dice_degraded_after": 0.8778474926948547,
+ "seconds": 475
+}
