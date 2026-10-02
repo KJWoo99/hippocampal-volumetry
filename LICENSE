@@ -1,0 +1,99 @@
+MIT License
+
+Copyright (c) 2026 Jeongwoo Kwak
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================================================================================
+SCOPE / 적용 범위
+================================================================================
+
+The MIT License above applies to the SOURCE CODE in this repository
+(src/, scripts/, tests/, configs/, docs/).
+
+위 MIT 라이선스는 이 저장소의 **소스 코드**에만 적용됩니다
+(src/, scripts/, tests/, configs/, docs/).
+
+--------------------------------------------------------------------------------
+DATASET / 데이터셋
+--------------------------------------------------------------------------------
+
+This project uses the Medical Segmentation Decathlon (MSD) Task04_Hippocampus
+dataset, which is licensed under Creative Commons Attribution-ShareAlike 4.0
+International (CC BY-SA 4.0).
+
+  Antonelli M, Reinke A, Bakas S, et al.
+  "The Medical Segmentation Decathlon."
+  Nature Communications 13, 4128 (2022).
+  https://doi.org/10.1038/s41467-022-30695-9
+
+  Data source: Vanderbilt University Medical Center
+  http://medicaldecathlon.com/
+  License: https://creativecommons.org/licenses/by-sa/4.0/
+
+The dataset itself is NOT redistributed in this repository. It is downloaded
+automatically at runtime by MONAI's DecathlonDataset.
+
+데이터셋 자체는 이 저장소에 포함되어 있지 않습니다.
+실행 시 MONAI DecathlonDataset 이 자동으로 내려받습니다.
+
+--------------------------------------------------------------------------------
+DERIVED ARTIFACTS / 파생 산출물
+--------------------------------------------------------------------------------
+
+The files under `outputs/` that are committed to this repository
+(best_model.pth, benchmark_results.json, backend_benchmark.json, splits.json,
+subject_pairs.json, ablation/*.json, degradation_*.json, dice_curve.png,
+bland_altman.png, report.json, report.pdf)
+are computed from the CC BY-SA 4.0 dataset.
+
+To respect the ShareAlike condition, these derived artifacts are made available
+under the SAME license as the source data:
+
+    CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
+    Attribution: Medical Segmentation Decathlon Task04_Hippocampus
+                 (Vanderbilt University Medical Center)
+
+이 저장소에 커밋된 `outputs/` 산출물(플롯, 지표, 리포트)은 CC BY-SA 4.0 데이터로부터
+계산된 결과물입니다. ShareAlike 조건을 존중하여 **원본 데이터와 동일한 라이선스**로
+배포합니다.
+
+Note: aggregate statistics are generally not considered derivative works, but
+this project applies the stricter interpretation deliberately: being explicit
+about license propagation is part of the data governance practice this project
+is meant to demonstrate.
+
+참고: 집계 통계는 일반적으로 2차적저작물로 보지 않으나, 이 프로젝트는 의도적으로
+더 엄격한 해석을 적용합니다. 라이선스 전파를 명시하는 것 자체가 이 프로젝트가
+보이려는 데이터 거버넌스 실무의 일부이기 때문입니다.
+
+--------------------------------------------------------------------------------
+MODEL WEIGHTS / 모델 가중치
+--------------------------------------------------------------------------------
+
+One trained weight file is included: outputs/best_model.pth, the deployed
+SegResNet (fold 0). It is derived from the CC BY-SA 4.0 dataset and is
+distributed under CC BY-SA 4.0. Other checkpoints, ONNX models, and TensorRT
+engines are not included (see .gitignore) and would carry the same ShareAlike
+obligation if distributed.
+
+학습된 가중치 중 배포 모델 하나(outputs/best_model.pth, SegResNet fold 0)만
+저장소에 포함하며, CC BY-SA 4.0 데이터에서 파생된 것이므로 CC BY-SA 4.0 으로
+배포합니다. 나머지 체크포인트, ONNX, TensorRT 엔진은 포함하지 않습니다(.gitignore).
+배포한다면 동일한 ShareAlike 의무가 따릅니다.

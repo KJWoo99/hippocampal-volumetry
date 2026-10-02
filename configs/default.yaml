@@ -1,0 +1,72 @@
+# 기본 설정. CLI에서 `hippo train --override train.epochs=50 model.name=segresnet` 처럼 덮어쓴다.
+data:
+  root: ./data
+  task: Task04_Hippocampus
+  cache_rate: 1.0
+  num_workers: 2
+  val_frac: 0.2
+  n_splits: 5
+  # 260개 중 20%(52개)를 홀드아웃으로 분리. 체크포인트 선택에 일절 사용하지 않는다.
+  holdout_frac: 0.2
+  # 홀드아웃 시드는 train.seed와 분리 고정. 아키텍처가 바뀌어도 홀드아웃은 동일해야 비교가 성립한다.
+  holdout_seed: 1234
+  fold_seed: 42          # k-fold 분할 전용. train.seed 는 초기값만 정한다
+  # roi가 볼륨 전체를 덮으므로 RandCrop은 no-op. 1로 두어 동일 샘플 중복 생성을 막는다.
+  crop_samples: 1
+  # 증강 단계: basic(flip+rotate90) | intensity(+잡음, 평활, 밝기, 대비, 바이어스필드)
+  #          | spatial(RandAffine +/- 15°, +/- 10%) | spatial-wide(+/- 30°, +/- 20%)
+  #
+  # 짝 단위 분할로 돌린 400에폭 절제실험(docs/EXPERIMENT_LOG.md)에서 intensity 는 차이가 없었고(+0.0008),
+  # spatial 은 +0.0072, spatial-wide 는 +0.0084 였다. 처음 회차 최고인 spatial-wide(#11)를 시드 43, 44 로 두 번 더
+  # 돌려 세 시드 평균(0.8867)이 기준선 계열(0.8789)보다 판정선(0.0039) 이상 높아 이것을 쓴다(docs/prereg_pair_split.md).
+  # #11 위의 범위 절반(spatial, -0.0004), 적용 확률 1.0(spatial-wide-always, +0.0011), 강도 증강 뺌
+  # (spatial-wide-geo, +0.0008)은 모두 판정선 안이라 그대로 둔다.
+  #
+  # 회전 각도를 rotate90 에서 +/- 15° 로 바꾼 것이 요점이다. 머리 자세는 실제로
+  # 조금씩 기울지만 90도 돌아간 뇌 MRI 는 없다. 있을 법한 변형만 넣어야 효과가
+  # 있다는 뜻으로 읽었다.
+  aug: spatial-wide
+
+model:
+  # 아키텍처 벤치마크로 확정 (개발셋 5-fold CV, n=208, 400에폭, 짝 단위 분할, outputs/benchmark_results.json)
+  #   unet 0.8789 +/- 0.0016 / segresnet 0.8878 +/- 0.0025 / swinunetr 0.8865 +/- 0.0034
+  # 프로토콜대로 CV Dice 최고값인 segresnet 을 최종 모델로 선택했다.
+  #
+  # 읽을 때 주의할 것이 둘이다.
+  #   - segresnet 과 swinunetr 의 차이(0.0013)는 fold 간 표준편차보다 작다.
+  #     정확도로는 구분되지 않는다. 같은 값이면 더 가벼운 쪽이 낫다는 판단이
+  #     선택의 실질적 근거다.
+  #   - unet 과의 차이(0.0089)는 표준편차보다 크다. 이쪽은 실제 차이로 본다.
+  #
+  # 이 값을 바꾸면 내보내기가 거부한다. 벤치마크가 고른 아키텍처와 배포하는
+  # 아키텍처가 달라지면, 보고한 성능과 실제로 나가는 모델이 어긋나기 때문이다.
+  name: segresnet       # unet | segresnet | swinunetr
+  in_channels: 1
+  out_channels: 3
+  # 64^3 인 이유:
+  #   - 학습 볼륨 260개의 최대 단일 축이 59 -> 전 볼륨을 잘림 없이 포함
+  #   - SwinUNETR는 32배 축소 구조라 32^3에서 1x1x1로 붕괴(InstanceNorm 실패). 최소 64^3
+  #   => 세 아키텍처를 같은 입력으로 공정 비교할 수 있는 최소 크기
+  roi: [64, 64, 64]
+
+train:
+  # 한도에 걸려 끊긴 점수로 아키텍처를 판정하지 않게 넉넉히 두고, patience 20 이
+  # 멈추는 지점을 정하게 한다(트러블슈팅 7번).
+  epochs: 400
+  # 절제 #2(배치 8)는 -0.0022 로 판정선 안이라 2 를 그대로 둔다.
+  batch: 2
+  lr: 0.001
+  weight_decay: 1e-05
+  val_interval: 2
+  grad_accum: 1
+  amp: true
+  # 평가 때 최대 연결성분만 남길지. `hippo predict` 와 같은 마스크로 재도록 켠다.
+  # 절제실험 #1(켬)과 #13(끔)의 차이는 +0.0002 로 판정선 아래다. 홀드아웃 부피도
+  # 같은 후처리를 거친다(트러블슈팅 12).
+  postproc_largest_component: true
+  early_stop_patience: 20
+  lr_patience: 8
+  lr_factor: 0.5
+  seed: 42
+
+out_dir: ./outputs

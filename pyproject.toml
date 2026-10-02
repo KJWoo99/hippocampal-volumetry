@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hippo-volumetry"
+version = "0.1.0"
+description = "Hippocampal 3D segmentation and clinical volumetry pipeline (MONAI)"
+readme = "README.md"
+requires-python = ">=3.13"
+license = { file = "LICENSE" }
+authors = [{ name = "Jeongwoo Kwak" }]
+dependencies = [
+  "einops",
+    "monai==1.6.0",
+    "nibabel",
+    "numpy",
+    "scipy",
+    "scikit-learn",
+    "scikit-image",
+    "SimpleITK",
+    "PyWavelets",
+    "pandas",
+    "matplotlib",
+    "seaborn",
+    "omegaconf",
+    "typer",
+    "reportlab",
+    "tqdm",
+    "gdown",
+]
+
+[project.optional-dependencies]
+export = ["onnx==1.22.0", "onnxruntime==1.27.0", "onnxscript==0.7.1"]
+# packaging: 선언끼리 모순되는지 검사할 때 버전 조건을 파싱한다.
+# 버전을 고정한다: CI 가 이 목록으로 설치하는데, 고정하지 않으면 environment.yml
+# 과 다른 판으로 검사하게 된다. ruff 는 판이 바뀌면 규칙이 달라져서 통과 여부가
+# 갈린다. 값은 environment.yml 과 같게 유지할 것.
+dev = ["pytest==9.1.1", "ruff==0.16.6", "packaging==26.3"]
+
+[project.scripts]
+hippo = "hippo.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
+# B008: typer.Option / fastapi.File 을 인자 기본값에 두는 것은 두 프레임워크의 정식 관용구
+ignore = [
+    "E501", "B008",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+# 설치 없이 테스트가 돌아야 한다. 이 줄이 없으면 `pip install -e .` 을 하지 않은 환경에서
+# 테스트가 수집 단계에서 ModuleNotFoundError 로 멈춘다.
+pythonpath = ["src"]

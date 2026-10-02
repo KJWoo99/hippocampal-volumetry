@@ -1,0 +1,62 @@
+# 가상환경
+.venv/
+venv/
+.conda/
+
+# 데이터셋 (MSD Task04: 자동 다운로드되므로 재배포 불필요)
+# 반드시 선행 슬래시를 붙일 것. `data/` 로 쓰면 src/hippo/data/ 소스까지 제외된다.
+/data/
+
+# ── 학습 산출물 ────────────────────────────────────────────────
+# 대용량 바이너리는 제외하되, 결과 근거(플롯, 지표, 리포트)는 공개한다.
+# MSD Task04는 CC-BY-SA 4.0 공개 데이터라 결과물 공개에 제약이 없다.
+# 주의: .gitignore에서 #은 줄 맨 앞에서만 주석이다. 패턴 뒤에 주석을 붙이면 패턴이 깨진다.
+# 살리는 것: dice_curve.png / bland_altman.png / cv_results.json / report.json / report.pdf
+outputs/*
+!outputs/*.png
+!outputs/*.json
+!outputs/*.pdf
+# 절제 기록(회차마다 설정, fold 별 점수, 학습 곡선). 일지와 README 의 절제 수치를 검증할 근거라 올린다.
+!outputs/ablation/
+outputs/ablation/*
+!outputs/ablation/*.json
+
+# 대용량 가중치, 엔진 (경로 무관 전역 차단)
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.plan
+*.engine
+
+# 배포 모델만 포함 (18MB). 벤치마크가 고른 SegResNet 의 fold0 가중치를 복사한 것으로,
+# 내보내기, 지연 측정, 예시 추론이 실은 파일과 같다. clone 직후 predict.py 가 이것을 싣는다.
+!outputs/best_model.pth
+
+# 파이썬 캐시 / 빌드
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# 도구 상태(에디터 플러그인이 남기는 런타임 상태, 프로젝트 내용이 아니다)
+.bkit/
+
+# OS 아티팩트
+.DS_Store
+._*
+Thumbs.db
+
+# --- 도구, 실행 부산물 ---
+# .coverage 는 pytest 커버리지 SQLite DB 로, 절대경로가 박혀 있고 실행마다 바뀐다.
+.coverage
+.coverage.*
+htmlcov/
+outputs/_before_*/
+# 옛 산출물 보관은 폴더뿐 아니라 파일로도 남는다
+outputs/_before_*
