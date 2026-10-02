@@ -1,0 +1,29 @@
+{
+  "device": "NVIDIA GeForce RTX 4090",
+  "model": "segresnet",
+  "roi": [
+    64,
+    64,
+    64
+  ],
+  "batch": 1,
+  "backends": {
+    "pytorch_fp32": {
+      "latency_ms": 2.8420082991942763,
+      "throughput_ips": 351.8638563735036,
+      "vram_mb": 126.06208,
+      "speedup_vs_pytorch": 1.0
+    },
+    "onnxruntime": {
+      "latency_ms": 2.9603460198268294,
+      "throughput_ips": 337.7983496870061,
+      "speedup_vs_pytorch": 0.96
+    },
+    "tensorrt_fp16": {
+      "latency_ms": 0.9250924596562982,
+      "throughput_ips": 1080.973030924425,
+      "vram_mb": 25.10848,
+      "speedup_vs_pytorch": 3.07
+    }
+  }
+}

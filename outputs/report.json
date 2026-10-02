@@ -1,0 +1,32 @@
+{
+  "case_id": "hippocampus_001.nii.gz",
+  "model": "segresnet",
+  "volumetry": {
+    "space": "resampled_1mm",
+    "spacing_mm": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "voxel_volume_mm3": 1.0,
+    "per_label_mm3": {
+      "anterior": 1356.0,
+      "posterior": 1668.0
+    },
+    "per_label_voxels": {
+      "anterior": 1356,
+      "posterior": 1668
+    },
+    "total_mm3": 3024.0,
+    "total_voxels": 3024
+  },
+  "volume_agreement": null,
+  "normative": null,
+  "qc": {
+    "passed": true,
+    "flags": [],
+    "total_mm3": 3024.0,
+    "cleanup_removed_voxels": 0
+  },
+  "disclaimer": "연구용. 정상군 파라미터는 예시값이며 임상 판정에 사용 불가."
+}
